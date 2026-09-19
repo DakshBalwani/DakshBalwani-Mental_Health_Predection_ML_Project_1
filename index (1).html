@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Habits &amp; Wellbeing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-wash" aria-hidden="true"></div>
+
+<main class="page">
+
+  <header class="hero">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 48 48" width="40" height="40">
+        <path d="M24 42C24 42 6 30.5 6 18.5C6 11 11.5 6 18 6C21 6 23 7.5 24 9.5C25 7.5 27 6 30 6C36.5 6 42 11 42 18.5C42 30.5 24 42 24 42Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M12 22H18L21 15L26 29L29 22H36" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h1>How are your habits shaping your headspace?</h1>
+    <p class="hero-sub">Answer a few honest questions about your day &mdash; screen time, sleep, study, stress &mdash; and get a predicted wellbeing score from a model trained on student data.</p>
+  </header>
+
+  <section class="panel" id="formPanel">
+
+    <ol class="steps" id="stepIndicator">
+      <li class="step is-active" data-step="1"><span class="step-num">1</span><span class="step-label">About you</span></li>
+      <li class="step" data-step="2"><span class="step-num">2</span><span class="step-label">Digital habits</span></li>
+      <li class="step" data-step="3"><span class="step-num">3</span><span class="step-label">Daily life</span></li>
+      <li class="step" data-step="4"><span class="step-num">4</span><span class="step-label">Wellbeing</span></li>
+    </ol>
+
+    <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+    <div id="formError" class="form-banner" hidden></div>
+
+    <form id="predictForm" novalidate>
+
+      <!-- STEP 1 -->
+      <fieldset class="step-panel is-active" data-step="1">
+        <legend class="visually-hidden">About you</legend>
+
+        <div class="field">
+          <label for="age">Age</label>
+          <input type="number" id="age" name="age" min="10" max="100" placeholder="e.g. 21" required>
+          <p class="field-hint">Between 10 and 100</p>
+          <p class="field-error" data-for="age"></p>
+        </div>
+
+        <div class="field">
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender" required>
+            <option value="" disabled selected>Select&hellip;</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          <p class="field-error" data-for="gender"></p>
+        </div>
+
+        <div class="field">
+          <label for="country">Country</label>
+          <input type="text" id="country" name="country" list="countryList" placeholder="e.g. India" autocomplete="off" required>
+          <datalist id="countryList"></datalist>
+          <p class="field-error" data-for="country"></p>
+        </div>
+
+        <div class="field">
+          <label for="academic_level">Academic level</label>
+          <select id="academic_level" name="academic_level" required>
+            <option value="" disabled selected>Select&hellip;</option>
+            <option value="High School">High School</option>
+            <option value="Undergraduate">Undergraduate</option>
+            <option value="Graduate">Graduate</option>
+          </select>
+          <p class="field-error" data-for="academic_level"></p>
+        </div>
+      </fieldset>
+
+      <!-- STEP 2 -->
+      <fieldset class="step-panel" data-step="2">
+        <legend class="visually-hidden">Digital habits</legend>
+
+        <div class="field">
+          <label for="most_used_platform">Most-used platform</label>
+          <select id="most_used_platform" name="most_used_platform" required>
+            <option value="" disabled selected>Select&hellip;</option>
+          </select>
+          <p class="field-error" data-for="most_used_platform"></p>
+        </div>
+
+        <div class="field">
+          <label for="purpose_of_use">Main purpose of use</label>
+          <select id="purpose_of_use" name="purpose_of_use" required>
+            <option value="" disabled selected>Select&hellip;</option>
+            <option value="Networking">Networking</option>
+            <option value="Entertasinment">Entertainment</option>
+            <option value="Education">Education</option>
+            <option value="News">News</option>
+          </select>
+          <p class="field-error" data-for="purpose_of_use"></p>
+        </div>
+
+        <div class="field field-slider">
+          <label for="avg_daily_usage_hours">Average daily screen time <span class="unit" id="usageOut">&mdash;</span></label>
+          <input type="range" id="avg_daily_usage_hours" name="avg_daily_usage_hours" min="0" max="24" step="1" value="4" required>
+          <div class="range-scale"><span>0h</span><span>24h</span></div>
+          <p class="field-error" data-for="avg_daily_usage_hours"></p>
+        </div>
+
+        <div class="field">
+          <label for="daily_unlocks">Phone unlocks per day</label>
+          <input type="number" id="daily_unlocks" name="daily_unlocks" min="0" step="1" placeholder="e.g. 60" required>
+          <p class="field-error" data-for="daily_unlocks"></p>
+        </div>
+      </fieldset>
+
+      <!-- STEP 3 -->
+      <fieldset class="step-panel" data-step="3">
+        <legend class="visually-hidden">Daily life</legend>
+
+        <div class="field field-slider">
+          <label for="study_hours">Study hours per day <span class="unit" id="studyOut">&mdash;</span></label>
+          <input type="range" id="study_hours" name="study_hours" min="0" max="24" step="0.5" value="3" required>
+          <div class="range-scale"><span>0h</span><span>24h</span></div>
+          <p class="field-error" data-for="study_hours"></p>
+        </div>
+
+        <div class="field field-slider">
+          <label for="physical_activity_hours">Physical activity per day <span class="unit" id="activityOut">&mdash;</span></label>
+          <input type="range" id="physical_activity_hours" name="physical_activity_hours" min="0" max="24" step="0.5" value="1" required>
+          <div class="range-scale"><span>0h</span><span>24h</span></div>
+          <p class="field-error" data-for="physical_activity_hours"></p>
+        </div>
+
+        <div class="field field-slider">
+          <label for="sleep_hours_per_night">Sleep per night <span class="unit" id="sleepOut">&mdash;</span></label>
+          <input type="range" id="sleep_hours_per_night" name="sleep_hours_per_night" min="0" max="24" step="0.5" value="7" required>
+          <div class="range-scale"><span>0h</span><span>24h</span></div>
+          <p class="field-error" data-for="sleep_hours_per_night"></p>
+        </div>
+      </fieldset>
+
+      <!-- STEP 4 -->
+      <fieldset class="step-panel" data-step="4">
+        <legend class="visually-hidden">Wellbeing</legend>
+
+        <div class="field">
+          <label>How would you describe your stress level lately?</label>
+          <div class="pill-group" id="stressGroup" role="radiogroup" aria-label="Stress level">
+            <button type="button" class="pill" data-value="Low">Low</button>
+            <button type="button" class="pill" data-value="Medium">Medium</button>
+            <button type="button" class="pill" data-value="High">High</button>
+            <button type="button" class="pill" data-value="Very High">Very High</button>
+          </div>
+          <input type="hidden" id="stress_level" name="stress_level" required>
+          <p class="field-error" data-for="stress_level"></p>
+        </div>
+
+        <p class="disclaimer">This is a data-driven estimate from a machine learning model, not a clinical assessment. If you're struggling, please talk to someone you trust or a mental health professional.</p>
+      </fieldset>
+
+      <div class="form-nav">
+        <button type="button" class="btn btn-ghost" id="backBtn" hidden>Back</button>
+        <button type="button" class="btn btn-primary" id="nextBtn">Continue</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn" hidden>
+          <span class="btn-label">Get my score</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+      </div>
+
+    </form>
+  </section>
+
+  <section class="panel result-panel" id="resultPanel" hidden>
+    <div class="result-inner">
+      <div class="gauge-wrap">
+        <svg class="gauge" viewBox="0 0 220 130" aria-hidden="true">
+          <path class="gauge-track" d="M20 110 A90 90 0 0 1 200 110" />
+          <path class="gauge-fill" id="gaugeFill" d="M20 110 A90 90 0 0 1 200 110" />
+        </svg>
+        <div class="gauge-readout">
+          <span class="gauge-score" id="gaugeScore">0</span>
+          <span class="gauge-max">/ 10</span>
+        </div>
+      </div>
+      <p class="result-tag" id="resultTag">&nbsp;</p>
+      <h2 class="result-heading" id="resultHeading">&nbsp;</h2>
+      <p class="result-body" id="resultBody">&nbsp;</p>
+      <button type="button" class="btn btn-ghost" id="retryBtn">Try different answers</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page-footer">
+  <span>Connects to your local API at <code id="apiUrlLabel">http://127.0.0.1:8000/predict</code></span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
